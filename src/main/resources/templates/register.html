@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrazione</title>
+</head>
+<body>
+<div>
+    <form method="post" th:action="@{/register}" th:object="${command}">
+        <div>
+            <label for="name_reg">Nome</label>
+            <input id="name_reg" type="text" th:field="*{name}">
+            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+        <div>
+            <label for="surname_reg">Cognome</label>
+            <input id="surname_reg" type="text" th:field="*{surname}">
+            <span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
+        </div>
+        <div>
+            <label for="email_reg">E-mail</label>
+            <input id="email_reg" type="email" th:field="*{email}">
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+        <div>
+            <label for="psw_reg">Password</label>
+            <input id="psw_reg" type="password" th:field="*{psw}">
+            <span th:if="${#fields.hasErrors('psw')}" th:errors="*{psw}"></span>
+        </div>
+        <div>
+            <label for="psw_ver_reg">Ripeti Password</label>
+            <input id="psw_ver_reg" type="password" th:field="*{pswv}">
+            <span th:if="${#fields.hasErrors('pswv')}" th:errors="*{pswv}"></span>
+        </div>
+        <div>
+            <label for="check_reg">Accetto le norme sulla privacy</label>
+            <input id="check_reg" type="checkbox" th:field="*{privacy}">
+            <span th:if="${#fields.hasErrors('privacy')}" th:errors="*{privacy}"></span>
+        </div>
+        <div><input type="submit" value="Registrati"></div>
+    </form>
+</div>
+</body>
+</html>

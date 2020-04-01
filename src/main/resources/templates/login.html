@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h1>Laboratorio 1</h1>
+
+<div>
+    <form action="#" th:action="@{/login}" method="post">
+        <div>
+            <label for="email_login">E-mail</label>
+            <input id="email_login" type="email">
+        </div>
+        <div>
+            <label for="psw_login">Password</label>
+            <input id="psw_login" type="password">
+        </div>
+        <div>
+            <label for="login_submit"></label>
+            <input id="login_submit" type="submit" value="Login">
+        </div>
+    </form>
+</div>
+<div><a href="#" th:href="@{/register}">Non sei registrato?</a></div>
+</body>
+</html>
