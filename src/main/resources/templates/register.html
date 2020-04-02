@@ -1,44 +1,57 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <title>Registrazione</title>
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{css/style.css}">
+    <link href="../static/css/bootstrap/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}"/>
 </head>
 <body>
-<div>
-    <form method="post" th:action="@{/register}" th:object="${command}">
+<div class="register_view">
+    <h1>Crea il tuo profilo</h1>
+    <form class="form-group" method="post" th:action="@{/register}" th:object="${command}">
         <div>
             <label for="name_reg">Nome</label>
-            <input id="name_reg" type="text" th:field="*{name}">
-            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+            <input th:classappend="${#fields.hasErrors('name')} ? error_input" class="form-control" id="name_reg" type="text" th:field="*{name}" placeholder="Inserisci il tuo nome">
+            <span class="error_msg" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
         </div>
         <div>
             <label for="surname_reg">Cognome</label>
-            <input id="surname_reg" type="text" th:field="*{surname}">
-            <span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
+            <input th:classappend="${#fields.hasErrors('surname')} ? error_input" class="form-control" id="surname_reg" type="text" th:field="*{surname}" placeholder="Inserisci il tuo cognome">
+            <span class="error_msg" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
         </div>
         <div>
             <label for="email_reg">E-mail</label>
-            <input id="email_reg" type="email" th:field="*{email}">
-            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            <input th:classappend="${#fields.hasErrors('email')} ? error_input" class="form-control" id="email_reg" type="email" th:field="*{email}" placeholder="mario.rossi@example.it">
+            <span class="error_msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
         </div>
         <div>
             <label for="psw_reg">Password</label>
-            <input id="psw_reg" type="password" th:field="*{psw}">
-            <span th:if="${#fields.hasErrors('psw')}" th:errors="*{psw}"></span>
+            <input th:classappend="${#fields.hasErrors('psw')} ? error_input" class="form-control" id="psw_reg" type="password" th:field="*{psw}" placeholder="Inserisci la tua password">
+            <span class="error_msg" th:if="${#fields.hasErrors('psw')}" th:errors="*{psw}"></span>
         </div>
         <div>
-            <label for="psw_ver_reg">Ripeti Password</label>
-            <input id="psw_ver_reg" type="password" th:field="*{pswv}">
-            <span th:if="${#fields.hasErrors('pswv')}" th:errors="*{pswv}"></span>
+            <label for="psw_ver_reg">Verifica Password</label>
+            <input th:classappend="${#fields.hasErrors('pswv')} ? error_input" class="form-control" id="psw_ver_reg" type="password" th:field="*{pswv}" placeholder="Inserisci nuovamente la tua password">
+            <span class="error_msg" th:if="${#fields.hasErrors('pswv')}" th:errors="*{pswv}"></span>
         </div>
-        <div>
-            <label for="check_reg">Accetto le norme sulla privacy</label>
-            <input id="check_reg" type="checkbox" th:field="*{privacy}">
-            <span th:if="${#fields.hasErrors('privacy')}" th:errors="*{privacy}"></span>
+        <div class="custom-control custom-checkbox">
+            <input class="custom-control-input" id="check_reg" type="checkbox" th:field="*{privacy}">
+            <label class="custom-control-label" for="check_reg">Accetto le norme sulla privacy</label>
+            <span class="error_msg" th:if="${#fields.hasErrors('privacy')}" th:errors="*{privacy}"></span>
         </div>
-        <div><input type="submit" value="Registrati"></div>
+        <div class="custom-submit-btn"><button type="submit" class="btn btn-outline-primary">Registrati</button></div>
     </form>
+
+    <!-- Bootstrap core JavaScript
+================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.js" th:src="@{js/bootstrap.js}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 </div>
 </body>
 </html>
