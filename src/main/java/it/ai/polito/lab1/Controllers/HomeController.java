@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -28,8 +29,8 @@ public class HomeController {
     }
 
     @GetMapping("/register")
-    public String registrationPage(Model m, @ModelAttribute("command") RegistrationCommand rc){
-        log.info("Register: " + rc);
+    public String registrationPage(@ModelAttribute("command") RegistrationCommand registrationCommand){
+        log.info("Register: " + registrationCommand);
         return "register";
     }
 
@@ -39,26 +40,27 @@ public class HomeController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("command") @Valid RegistrationCommand rc, BindingResult br){
+    public String register(@ModelAttribute("command") @Valid RegistrationCommand registrationCommand, BindingResult br, RedirectAttributes redirectAttributes){
         log.info("POST: registrazione");
-        log.info("Register: " + rc);
+        log.info("Register: " + registrationCommand);
 
         String psw1, psw2;
-        psw1 = rc.getPsw();
-        psw2 = rc.getPswv();
+        psw1 = registrationCommand.getPsw();
+        psw2 = registrationCommand.getPswv();
 
         if(!psw1.equals(psw2))
             br.addError(new FieldError("command","pswv", "Le due password non corrispondono"));
-        if(!rc.isPrivacy())
+        if(!registrationCommand.isPrivacy())
             br.addError(new FieldError("command", "privacy", "Non è stata accettata la norma sulla privacy"));
-        if(br.hasErrors())
+        if(br.hasErrors()) {
             return "/register";
+        }
 
-        RegistrationDetails rd = RegistrationDetails.builder().name(rc.getName())
-                .surname(rc.getSurname()).email(rc.getEmail()).psw(rc.getPsw())
-                .privacy(rc.isPrivacy()).registrationDate(new Date()).build();
+        RegistrationDetails rd = RegistrationDetails.builder().name(registrationCommand.getName())
+                .surname(registrationCommand.getSurname()).email(registrationCommand.getEmail()).psw(registrationCommand.getPsw())
+                .privacy(registrationCommand.isPrivacy()).registrationDate(new Date()).build();
 
-        if(rm.putIfAbsent(rc.getEmail(), rd) != null) {
+        if(rm.putIfAbsent(registrationCommand.getEmail(), rd) != null) {
             br.addError(new FieldError("command", "email", "Email già registrata"));
             return "/register";
         }
