@@ -1,5 +1,6 @@
 package it.ai.polito.lab1.Controllers;
 
+import it.ai.polito.lab1.Login.LoginCommand;
 import it.ai.polito.lab1.Registration.RegistrationCommand;
 import it.ai.polito.lab1.Registration.RegistrationDetails;
 import it.ai.polito.lab1.Registration.RegistrationManager;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Date;
 
@@ -24,19 +26,51 @@ public class HomeController {
     private RegistrationManager rm;
 
     @GetMapping("/")
-    public String home(){
+    public String home(@ModelAttribute("command") LoginCommand lc){
+        log.info("HOME: " + lc);
         return "login";
+    }
+
+   @GetMapping("/private")
+   public String privatePage(Model model, @ModelAttribute("command") LoginCommand loginCommand, HttpSession session){
+        RegistrationDetails rd = (RegistrationDetails)session.getAttribute("username");
+        if(rd == null)
+            return "redirect:/";
+
+        model.addAttribute("command", rd);
+        return "private";
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "redirect:/";
+    }
+    @PostMapping("/login")
+    public String login(@ModelAttribute("command") @Valid LoginCommand loginCommand, BindingResult bindingResult, HttpSession session){
+        if(bindingResult.hasErrors())
+            return "login";
+
+        RegistrationDetails rd = rm.get(loginCommand.getEmail());
+        if(rd == null || !rd.getPsw().equals(loginCommand.getPsw())) {
+            bindingResult.addError(new FieldError("command", "email", "L'indirizzo mail o la password non sono corrette"));
+            return "login";
+        }
+
+        session.setAttribute("username", rd);
+        return "redirect:/private";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session){
+        log.info("LOGOUT: "+session);
+        session.removeAttribute("username");
+        return "redirect:/";
     }
 
     @GetMapping("/register")
     public String registrationPage(@ModelAttribute("command") RegistrationCommand registrationCommand){
         log.info("Register: " + registrationCommand);
         return "register";
-    }
-
-    @PostMapping("/login")
-    public String postLogin(){
-        return "";
     }
 
     @PostMapping("/register")
@@ -50,11 +84,9 @@ public class HomeController {
 
         if(!psw1.equals(psw2))
             br.addError(new FieldError("command","pswv", "Le due password non corrispondono"));
-        if(!registrationCommand.isPrivacy())
-            br.addError(new FieldError("command", "privacy", "Non è stata accettata la norma sulla privacy"));
-        if(br.hasErrors()) {
+
+        if(br.hasErrors())
             return "/register";
-        }
 
         RegistrationDetails rd = RegistrationDetails.builder().name(registrationCommand.getName())
                 .surname(registrationCommand.getSurname()).email(registrationCommand.getEmail()).psw(registrationCommand.getPsw())

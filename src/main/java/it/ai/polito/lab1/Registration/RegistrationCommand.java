@@ -3,6 +3,7 @@ package it.ai.polito.lab1.Registration;
 import lombok.Data;
 
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -20,5 +21,6 @@ public class RegistrationCommand {
     private String psw;
     @Size(min = 8, max = 16, message = "{command.psw.message}")
     private String pswv;
+    @AssertTrue(message = "{command.privacy.message}")
     private boolean privacy;
 }

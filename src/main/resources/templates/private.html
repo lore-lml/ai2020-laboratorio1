@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>Login</title>
+    <title>Registrazione</title>
     <link rel="stylesheet" href="../static/css/style.css" th:href="@{css/style.css}">
     <link href="../static/css/bootstrap/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
@@ -13,27 +13,32 @@
 <body>
 <div class="mycontainer">
     <div class="form_view">
-        <h1>Login</h1>
-        <form class="form-group" action="login.html" th:action="@{/login}" method="post" th:object="${command}">
+        <h1>Il tuo Profilo</h1>
+        <form class="form-group" method="post" th:action="@{/logout}">
             <div>
-                <label for="email_login">E-mail</label>
-                <input class="form-control" id="email_login" type="email"  placeholder="Inserisci la tua Email" th:field="*{email}">
-                <span class="error_msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                <label for="name_user">Nome</label>
+                <input class="form-control" readonly id="name_user" type="text" th:value="${command.name}">
             </div>
             <div>
-                <label for="psw_login">Password</label>
-                <input th:classappend="${#fields.hasErrors('psw')} ? error_input" class="form-control" id="psw_login" type="password" placeholder="Inserisci la tua password" th:field="*{psw}">
-                <span class="error_msg" th:if="${#fields.hasErrors('psw')}" th:errors="*{psw}"></span>
+                <label for="surname_user">Cognome</label>
+                <input  class="form-control" readonly id="surname_user" type="text" th:value="${command.surname}">
             </div>
             <div>
-                <div class="custom-submit-btn"><button type="submit" class="btn btn-outline-primary">Login</button></div>
+                <label for="email_user">E-mail</label>
+                <input class="form-control" readonly id="email_user" type="email" th:value="${command.email}">
             </div>
+            <div>
+                <label for="date_user">Data di creazione</label>
+                <input class="form-control" readonly id="date_user" type="email" th:value="${command.dateToString()}">
+            </div>
+
+            <div class="custom-submit-btn"><button type="submit" class="btn btn-outline-primary">Logout</button></div>
         </form>
-        <div class="link_to_register"><a href="register.html" th:href="@{/register}">Non sei registrato?</a></div>
     </div>
 </div>
+
 <!-- Bootstrap core JavaScript
-    ================================================== -->
+================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../static/js/bootstrap.js" th:src="@{js/bootstrap.js}"></script>
