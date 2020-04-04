@@ -29,8 +29,8 @@ public class HomeController {
     public String home(@ModelAttribute("command") LoginCommand lc, HttpSession session){
         log.info("HOME: " + lc);
         //If session exists, redirect to private page avoiding another login
-        RegistrationDetails rd = (RegistrationDetails)session.getAttribute("username");
-        if(rd != null)
+        String email = (String)session.getAttribute("username");
+        if(email != null)
             return "redirect:/private";
         //Else show login form
         return "login";
@@ -39,11 +39,11 @@ public class HomeController {
    @GetMapping("/private")
    public String privatePage(Model model, @ModelAttribute("command") LoginCommand loginCommand, HttpSession session){
        //If session doesn't exists, redirect to home page avoiding to get an unavailable page
-        RegistrationDetails rd = (RegistrationDetails)session.getAttribute("username");
-        if(rd == null)
+       String email = (String)session.getAttribute("username");
+       if(email == null || rm.get(email) == null)
             return "redirect:/";
         //Else store user information to be shown and return private page
-        model.addAttribute("command", rd);
+        model.addAttribute("command", rm.get(email));
         return "private";
     }
 
@@ -68,7 +68,7 @@ public class HomeController {
         }
 
         //Else add user info to the current session and show his private page
-        session.setAttribute("username", rd);
+        session.setAttribute("username", loginCommand.getEmail());
         return "redirect:/private";
     }
 
