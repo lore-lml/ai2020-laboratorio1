@@ -27,7 +27,7 @@
             </div>
             <div>
                 <label for="email_reg">E-mail</label>
-                <input th:classappend="${#fields.hasErrors('email')} ? error_input" class="form-control" id="email_reg" type="email" th:field="*{email}" placeholder="mario.rossi@example.it">
+                <input th:classappend="${#fields.hasErrors('email')} ? error_input" class="form-control" id="email_reg" type="email" th:field="*{email}" placeholder="Inserisci la tua e-mail">
                 <span class="error_msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
             </div>
             <div>

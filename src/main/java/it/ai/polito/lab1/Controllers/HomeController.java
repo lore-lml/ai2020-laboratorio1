@@ -26,42 +26,55 @@ public class HomeController {
     private RegistrationManager rm;
 
     @GetMapping("/")
-    public String home(@ModelAttribute("command") LoginCommand lc){
+    public String home(@ModelAttribute("command") LoginCommand lc, HttpSession session){
         log.info("HOME: " + lc);
+        //If session exists, redirect to private page avoiding another login
+        RegistrationDetails rd = (RegistrationDetails)session.getAttribute("username");
+        if(rd != null)
+            return "redirect:/private";
+        //Else show login form
         return "login";
     }
 
    @GetMapping("/private")
    public String privatePage(Model model, @ModelAttribute("command") LoginCommand loginCommand, HttpSession session){
+       //If session doesn't exists, redirect to home page avoiding to get an unavailable page
         RegistrationDetails rd = (RegistrationDetails)session.getAttribute("username");
         if(rd == null)
             return "redirect:/";
-
+        //Else store user information to be shown and return private page
         model.addAttribute("command", rd);
         return "private";
     }
 
     @GetMapping("/login")
     public String login(){
+        //Just to avoid error of missing page if the user use the get method for this url after a login try
         return "redirect:/";
     }
     @PostMapping("/login")
     public String login(@ModelAttribute("command") @Valid LoginCommand loginCommand, BindingResult bindingResult, HttpSession session){
+        log.info("LOGIN: " + loginCommand);
+        //If there errors cause by automatic validation, show them
         if(bindingResult.hasErrors())
             return "login";
 
+        //Else if the account doesn't exist or the password doesn't match, show incorrect combination error
         RegistrationDetails rd = rm.get(loginCommand.getEmail());
         if(rd == null || !rd.getPsw().equals(loginCommand.getPsw())) {
             bindingResult.addError(new FieldError("command", "email", "L'indirizzo mail o la password non sono corrette"));
+            bindingResult.addError(new FieldError("command", "psw", "")); //Just to enable to red border on psw field
             return "login";
         }
 
+        //Else add user info to the current session and show his private page
         session.setAttribute("username", rd);
         return "redirect:/private";
     }
 
     @PostMapping("/logout")
     public String logout(HttpSession session){
+        //Remove user info from the current session
         log.info("LOGOUT: "+session);
         session.removeAttribute("username");
         return "redirect:/";
@@ -70,24 +83,28 @@ public class HomeController {
     @GetMapping("/register")
     public String registrationPage(@ModelAttribute("command") RegistrationCommand registrationCommand){
         log.info("Register: " + registrationCommand);
+        //Simply shows register form page
         return "register";
     }
 
     @PostMapping("/register")
     public String register(@ModelAttribute("command") @Valid RegistrationCommand registrationCommand, BindingResult br, RedirectAttributes redirectAttributes){
-        log.info("POST: registrazione");
-        log.info("Register: " + registrationCommand);
+        log.info("POST: registrazione ");
+        log.info(registrationCommand.toString());
 
         String psw1, psw2;
         psw1 = registrationCommand.getPsw();
         psw2 = registrationCommand.getPswv();
 
+        //Check if passwords matches
         if(!psw1.equals(psw2))
             br.addError(new FieldError("command","pswv", "Le due password non corrispondono"));
 
+        //Show the errors in case something went wrong
         if(br.hasErrors())
             return "/register";
 
+        //Else if everything is fine, try to register the user if the email isn't already present in the map
         RegistrationDetails rd = RegistrationDetails.builder().name(registrationCommand.getName())
                 .surname(registrationCommand.getSurname()).email(registrationCommand.getEmail()).psw(registrationCommand.getPsw())
                 .privacy(registrationCommand.isPrivacy()).registrationDate(new Date()).build();

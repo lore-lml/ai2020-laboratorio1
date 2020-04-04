@@ -15,9 +15,10 @@
     <div class="form_view">
         <h1>Login</h1>
         <form class="form-group" action="login.html" th:action="@{/login}" method="post" th:object="${command}">
+
             <div>
                 <label for="email_login">E-mail</label>
-                <input class="form-control" id="email_login" type="email"  placeholder="Inserisci la tua Email" th:field="*{email}">
+                <input th:classappend="${#fields.hasErrors('email')} ? error_input" class="form-control" id="email_login" type="email" th:field="*{email}" placeholder="Inserisci la tua e-mail">
                 <span class="error_msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
             </div>
             <div>
@@ -28,8 +29,12 @@
             <div>
                 <div class="custom-submit-btn"><button type="submit" class="btn btn-outline-primary">Login</button></div>
             </div>
+
+
+
         </form>
         <div class="link_to_register"><a href="register.html" th:href="@{/register}">Non sei registrato?</a></div>
+
     </div>
 </div>
 <!-- Bootstrap core JavaScript
