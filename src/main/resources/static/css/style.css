@@ -16,6 +16,8 @@ body{
     height: 100%;
 }
 
+.hide{display: none;}
+
 .form_view{
     width: 30%;
     height: auto;
@@ -33,10 +35,16 @@ body{
     -moz-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%)
 }
+
 .form_view>h1{
     text-align: center;
-
 }
+
+.form_view>div.alert{
+    text-align: center;
+    font-size: 1.2em;
+}
+
 .form_view input{
     width: 100%;
 }

@@ -14,8 +14,9 @@
 <div class="mycontainer">
     <div class="form_view">
         <h1>Login</h1>
+        <!--/*@thymesVar id="success" type="java.lang.String"*/-->
+        <div class="alert alert-primary" role="alert" th:classappend="${success==null} ? hide" th:text="${success}"></div>
         <form class="form-group" action="login.html" th:action="@{/login}" method="post" th:object="${command}">
-
             <div>
                 <label for="email_login">E-mail</label>
                 <input th:classappend="${#fields.hasErrors('email')} ? error_input" class="form-control" id="email_login" type="email" th:field="*{email}" placeholder="Inserisci la tua e-mail">

@@ -114,6 +114,7 @@ public class HomeController {
             return "/register";
         }
 
+        redirectAttributes.addFlashAttribute("success", "Il tuo profilo è stato creato con successo.\nOra puoi effettuare il login.");
         return "redirect:/";
     }
 }
