@@ -26,13 +26,15 @@ public class HomeController {
     private RegistrationManager rm;
 
     @GetMapping("/")
-    public String home(@ModelAttribute("command") LoginCommand lc, HttpSession session){
+    public String home(Model model, @ModelAttribute("command") LoginCommand lc, HttpSession session){
         log.info("HOME: " + lc);
         //If session exists, redirect to private page avoiding another login
         String email = (String)session.getAttribute("username");
         if(email != null)
             return "redirect:/private";
         //Else show login form
+        model.addAttribute("success1", model.getAttribute("success1")); //Just to make intelliJ recognize redirect attribute.
+        model.addAttribute("success2", model.getAttribute("success2")); //Just to make intelliJ recognize redirect attribute.
         return "login";
     }
 
@@ -114,7 +116,8 @@ public class HomeController {
             return "/register";
         }
 
-        redirectAttributes.addFlashAttribute("success", "Il tuo profilo è stato creato con successo.\nOra puoi effettuare il login.");
+        redirectAttributes.addFlashAttribute("success1", "Il tuo profilo è stato creato con successo.");
+        redirectAttributes.addFlashAttribute("success2", "Ora puoi effettuare il login.");
         return "redirect:/";
     }
 }
