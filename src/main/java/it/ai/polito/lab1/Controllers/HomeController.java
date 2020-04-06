@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 @Controller
 @Log(topic = "HomeController")
@@ -62,9 +63,10 @@ public class HomeController {
             return "login";
 
         //Else if the account doesn't exist or the password doesn't match, show incorrect combination error
+        ResourceBundle rb = ResourceBundle.getBundle("ValidationMessages");
         RegistrationDetails rd = rm.get(loginCommand.getEmail());
         if(rd == null || !rd.getPsw().equals(loginCommand.getPsw())) {
-            bindingResult.addError(new FieldError("command", "email", "L'indirizzo mail o la password non sono corrette"));
+            bindingResult.addError(new FieldError("command", "email", rb.getString("loginCommand.email.pswDontMatch")));
             bindingResult.addError(new FieldError("command", "psw", "")); //Just to enable to red border on psw field
             return "login";
         }
@@ -93,6 +95,7 @@ public class HomeController {
     public String register(@ModelAttribute("command") @Valid RegistrationCommand registrationCommand, BindingResult br, RedirectAttributes redirectAttributes){
         log.info("POST: registrazione ");
         log.info(registrationCommand.toString());
+        ResourceBundle rb = ResourceBundle.getBundle("ValidationMessages");
 
         String psw1, psw2;
         psw1 = registrationCommand.getPsw();
@@ -100,7 +103,7 @@ public class HomeController {
 
         //Check if passwords matches
         if(!psw1.equals(psw2))
-            br.addError(new FieldError("command","pswv", "Le due password non corrispondono"));
+            br.addError(new FieldError("command","pswv", rb.getString("command.register.pswDontMatch")));
 
         //Show the errors in case something went wrong
         if(br.hasErrors())
@@ -112,12 +115,13 @@ public class HomeController {
                 .privacy(registrationCommand.isPrivacy()).registrationDate(new Date()).build();
 
         if(rm.putIfAbsent(registrationCommand.getEmail(), rd) != null) {
-            br.addError(new FieldError("command", "email", "Email già registrata"));
+            br.addError(new FieldError("command", "email", rb.getString("command.register.duplicatedEmail")));
             return "/register";
         }
 
-        redirectAttributes.addFlashAttribute("success1", "Il tuo profilo è stato creato con successo.");
-        redirectAttributes.addFlashAttribute("success2", "Ora puoi effettuare il login.");
+
+        redirectAttributes.addFlashAttribute("success1", rb.getString("command.login.success1"));
+        redirectAttributes.addFlashAttribute("success2", rb.getString("command.login.success2"));
         return "redirect:/";
     }
 }
