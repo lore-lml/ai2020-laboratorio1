@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 @Controller
@@ -95,8 +96,8 @@ public class HomeController {
     public String register(@ModelAttribute("command") @Valid RegistrationCommand registrationCommand, BindingResult br, RedirectAttributes redirectAttributes){
         log.info("POST: registrazione ");
         log.info(registrationCommand.toString());
-        ResourceBundle rb = ResourceBundle.getBundle("ValidationMessages");
 
+        ResourceBundle rb = ResourceBundle.getBundle("ValidationMessages");
         String psw1, psw2;
         psw1 = registrationCommand.getPsw();
         psw2 = registrationCommand.getPswv();
@@ -118,7 +119,6 @@ public class HomeController {
             br.addError(new FieldError("command", "email", rb.getString("command.register.duplicatedEmail")));
             return "/register";
         }
-
 
         redirectAttributes.addFlashAttribute("success1", rb.getString("command.login.success1"));
         redirectAttributes.addFlashAttribute("success2", rb.getString("command.login.success2"));

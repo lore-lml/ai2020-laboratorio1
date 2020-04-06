@@ -32,7 +32,7 @@
             </div>
             <div>
                 <label for="psw_reg">Password
-                    <i class="fas fa-info-circle" data-toggle="tooltip" title="La password deve contenere un numero di caratteri compreso tra 2 e 50" th:title="${#messages.msg('command.namesurname.message')}"></i>
+                    <i class="fas fa-info-circle" data-toggle="tooltip" title="La password deve contenere un numero di caratteri compreso tra 6 e 30"></i>
                 </label>
                 <input th:classappend="${#fields.hasErrors('psw')} ? error_input" class="form-control" id="psw_reg" type="password" th:field="*{psw}" placeholder="Inserisci la tua password">
                 <span class="error_msg" th:if="${#fields.hasErrors('psw')}" th:errors="*{psw}"></span>
