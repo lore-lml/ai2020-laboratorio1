@@ -67,7 +67,7 @@ public class HomeController {
         RegistrationDetails rd = rm.get(loginCommand.getEmail());
         if(rd == null || !rd.getPsw().equals(loginCommand.getPsw())) {
             bindingResult.addError(new FieldError("command", "email", rb.getString("loginCommand.email.pswDontMatch")));
-            bindingResult.addError(new FieldError("command", "psw", "")); //Just to enable to red border on psw field
+            bindingResult.addError(new FieldError("command", "psw", "")); //Just to enable the red border on psw field
             return "login";
         }
 
